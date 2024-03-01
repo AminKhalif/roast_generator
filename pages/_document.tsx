@@ -43,9 +43,9 @@ class MyDocument extends Document {
             property="og:description"
             content="Restore your old face photos and keep the memories alive."
           />
-          <meta property="og:title" content="Don't get it?" />
+          <meta property="og:title" content="Make friends" />
           <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:title" content="CanYouExplainTheJoke" />
+          <meta name="twitter:title" content="Tomofriend" />
           <meta
             name="twitter:description"
             content="Don't get a joke on the internet? Instead of looking like a clown, get an AI to explain it."

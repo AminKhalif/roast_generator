@@ -1,4 +1,4 @@
-# [CanYouExplainTheJoke.com](https://CanYouExplainTheJoke.com/)
+# Tomofriend
 
 This project explains jokes found on the internet. You can upload an image, and it explains the joke to the best of its ability. Inspire by [r/PeterExplainsTheJoke](https://www.reddit.com/r/PeterExplainsTheJoke/)
 
