@@ -61,42 +61,42 @@ export default async function handler(
   const imageUrl = req.body.imageUrl;
   async function fetchOpenAICompletions(imageUrl: string) {
     const OPENAI_API_KEY = process.env.OPENAI_API_KEY; // Ensure the API key is stored in an environment variable
-    let requestBody = {
-        model: "gpt-4-vision-preview",
-        messages: [
-            {
-                role: "user",
-                content: [
-                    {
-                        type: "text",
-                        text: "Describe the key features of the person like hair color, glasses, facial hair, gender, etc.." 
-                    },
-                    {
-                        type: "image_url",
-                        image_url: {
-                          url: imageUrl
-                        }
-                    },
-                    // {
-                    //     type: "image_url",
-                    //     image_url: {
-                    //       url: "https://i.imgur.com/fgyhijF.png"
-                    //     }
-                    // }
-                ]
-            }
-        ],
-        max_tokens: 300
-    };
-
+    
     try {
-        let response = await fetch("https://api.openai.com/v1/chat/completions", {
+      let requestBody2 = {
+          model: "gpt-4-vision-preview",
+          messages: [
+              {
+                  role: "user",
+                  content: [
+                      {
+                          type: "text",
+                          text: "Describe the key features of the person like hair color, glasses, facial hair, gender, etc.." 
+                      },
+                      {
+                          type: "image_url",
+                          image_url: {
+                            url: imageUrl
+                          }
+                      },
+                      // {
+                      //     type: "image_url",
+                      //     image_url: {
+                      //       url: "https://i.imgur.com/fgyhijF.png"
+                      //     }
+                      // }
+                  ]
+              }
+          ],
+          max_tokens: 300
+      };
+        let response: any = await fetch("https://api.openai.com/v1/chat/completions", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": "Bearer " + OPENAI_API_KEY
             },
-            body: JSON.stringify(requestBody)
+            body: JSON.stringify(requestBody2)
         });
         // console.log("response found!!!")
         // console.log("response", response)
