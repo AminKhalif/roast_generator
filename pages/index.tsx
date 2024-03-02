@@ -18,6 +18,7 @@ import {
 import NSFWFilter from 'nsfw-filter';
 import { useSession, signIn } from 'next-auth/react';
 import useSWR from 'swr';
+import { Rings } from 'react-loader-spinner';
 
 const Home: NextPage = () => {
   const [originalPhoto, setOriginalPhoto] = useState<string | null>(null);
@@ -77,6 +78,65 @@ const Home: NextPage = () => {
     },
   };
 
+  async function fetchOpenAICompletions(imageUrl: string) {
+    const OPENAI_API_KEY = process.env.OPENAI_API_KEY; // Ensure the API key is stored in an environment variable
+    const requestBody = {
+        model: "gpt-4-vision-preview",
+        messages: [
+            {
+                role: "user",
+                content: [
+                    {
+                        type: "text",
+                        text: "Using the image attached, create an image in a simplified cute cartoon style, focusing on adorable characters designed with basic geometric shapes and minimal lines that adapts or could look like the person in the attached image. The characters should feature expressive, friendly faces with just enough detail to convey emotion, while the overall design remains uncluttered. Use bright, cheerful colors to enhance the sense of warmth and positivity. This style should evoke a sense of joy and simplicity, making the characters immediately endearing and accessible. Please retain facial features from the photo, such as hair color and length, and facial hair or glasses if they exist. Please make them in cat form."
+                    },
+                    {
+                        type: "image_url",
+                        image_url: {
+                            // url: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg"
+                            url: imageUrl
+                        }
+                    }
+                ]
+            }
+        ],
+        max_tokens: 300
+    };
+
+
+    try {
+      let response = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer " + OPENAI_API_KEY
+          },
+          body: JSON.stringify(requestBody)
+      });
+      // console.log("response found!!!")
+      // console.log("response", response)
+
+      if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      let jsonResponse = await response.json();
+      // console.log(jsonResponse);
+      // console.log("final responseeee", jsonResponse.choices[0].message.content);
+      const explanation = jsonResponse.choices[0].message.content
+      console.log("EXPLANATION")
+      console.log(explanation)
+
+
+      return explanation;
+  } catch (error) {
+      console.error('Error fetching from OpenAI API:', error);
+  }  
+}
+
+
+
+
   async function generatePhoto(fileUrl: string) {
     await new Promise((resolve) => setTimeout(resolve, 500));
     setLoading(true);
@@ -119,6 +179,9 @@ const Home: NextPage = () => {
           setPhotoName(imageName);
           setOriginalPhoto(imageUrl);
           generatePhoto(imageUrl);
+          // fetchOpenAICompletions(imageUrl)
+
+          
         }
       }}
       width="670px"
@@ -185,8 +248,25 @@ const Home: NextPage = () => {
       {/* <Testimonials /> */}
       <UploadDropZone />
 
+      {loading ? <Rings
+                height="100"
+                width="100"
+                color="black"
+                radius="6"
+                wrapperStyle={{}}
+                wrapperClass=""
+                visible={true}
+                ariaLabel="rings-loading"
+              />
+ : restoredImage && <img       
+          width="335px"
+          height="125px"
+          src={restoredImage}
+        />
+      }
+
       {/* <Testimonials /> */}
-      <div id="quizForm" className="my-8">
+      {/* <div id="quizForm" className="my-8">
         <h2>1. What pronouns does your SO go by?</h2>
         <input type="radio" name="question1" value="She" id="q1a1" /><label htmlFor="q1a1">She</label><br />
         <input type="radio" name="question1" value="He" id="q1a2" /><label htmlFor="q1a2">He</label><br />
@@ -205,7 +285,7 @@ const Home: NextPage = () => {
         <button type="button" 
           // onClick={() => }
         >Submit</button>
-      </div>
+      </div> */}
 
       <Footer />
     </div>
