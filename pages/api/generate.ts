@@ -112,13 +112,12 @@ export default async function handler(
 
         console.log(explanation)
 
-        requestBody = {
+        let requestBody = {
           model: "dall-e-3",
           prompt: `Using the following description, create an image in a simplified cute cartoon style, focusing on adorable characters designed with basic geometric shapes and minimal lines that adapts or could look like the person in the description. The art style of the creature can be described as "minimalist" or "flat design". The background should be white. This style is characterized by simplicity, the use of solid colors, and minimal detailing, focusing on clean lines and basic shapes to convey the design's essence. It's often used in iconography and digital design for its clarity and ability to communicate ideas effectively without clutter. The characters should feature expressive, friendly faces with just enough detail to convey emotion, while the overall design remains uncluttered. Use bright, cheerful colors to enhance the sense of warmth and positivity. This style should evoke a sense of joy and simplicity, making the characters immediately endearing and accessible. Please retain facial features from the description, such as hair color and length, and facial hair or glasses if they exist. Please make them in cat form. The full body should be in the image. Please just include the image of the animal and nothing else (no text or icons). If the skin tone is dark or black, ensure the character is African American.\nDescription: ${explanation}`,
-          n:1,
-          size:"1024x1024",
-        };
-  
+          n: 1,
+          size: "1024x1024",
+      };  
       try {
           let response = await fetch("https://api.openai.com/v1/images/generations", {
               method: "POST",
