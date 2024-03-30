@@ -19,6 +19,9 @@ import NSFWFilter from 'nsfw-filter';
 import { useSession, signIn } from 'next-auth/react';
 import useSWR from 'swr';
 import { Rings } from 'react-loader-spinner';
+import Vapi from '@vapi-ai/web';
+
+
 
 const Home: NextPage = () => {
   const [originalPhoto, setOriginalPhoto] = useState<string | null>(null);
@@ -49,6 +52,7 @@ const Home: NextPage = () => {
     }    
   }
 
+  
   const options: UploadWidgetConfig = {
     apiKey: !!process.env.NEXT_PUBLIC_UPLOAD_API_KEY
       ? process.env.NEXT_PUBLIC_UPLOAD_API_KEY
@@ -79,6 +83,7 @@ const Home: NextPage = () => {
   };
 
   async function fetchOpenAICompletions(imageUrl: string) {
+    debugger
     const OPENAI_API_KEY = process.env.OPENAI_API_KEY; // Ensure the API key is stored in an environment variable
     const requestBody = {
         model: "gpt-4-vision-preview",
@@ -103,6 +108,8 @@ const Home: NextPage = () => {
         max_tokens: 300
     };
 
+    // const vapi = new Vapi(process.env.ELEVEN_LABS_KEY);
+    
 
     try {
       let response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -124,6 +131,32 @@ const Home: NextPage = () => {
       // console.log(jsonResponse);
       // console.log("final responseeee", jsonResponse.choices[0].message.content);
       const explanation = jsonResponse.choices[0].message.content
+
+
+      const llm_response_text = "You suuuuck"
+      const options = {
+        method: 'POST',
+        headers: {
+          'xi-api-key': '519cdf1327783bd8094dde183a91506a',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          text: llm_response_text,
+          model_id: "eleven_multilingual_v2",
+          voice_settings: {
+            similarity_boost: 0.8,
+            stability: 0.5,
+            style: 0.3
+          }
+        })
+      };    
+      fetch('https://api.elevenlabs.io/v1/text-to-speech/2l3NBlHTt1kN1ijFFAWO', options)
+        .then(response => response.json())
+        .then(response => console.log(response))
+        .catch(err => console.error(err));
+
+        
+
       console.log("EXPLANATION")
       console.log(explanation)
 
